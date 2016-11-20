@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1100</width>
+    <height>530</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="1" column="0">
+     <widget class="QComboBox" name="comboBox_serial"/>
+    </item>
+    <item row="0" column="2" rowspan="18">
+     <widget class="Line" name="line">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="7" rowspan="16">
+     <widget class="QProgressBar" name="progressBar_Contaner_3">
+      <property name="minimumSize">
+       <size>
+        <width>85</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="maximum">
+       <number>100</number>
+      </property>
+      <property name="value">
+       <number>24</number>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="format">
+       <string>%p %</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="5">
+     <widget class="QLabel" name="label_5">
+      <property name="text">
+       <string>Behälter 1</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="4" rowspan="18">
+     <widget class="Line" name="line_2">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="0">
+     <widget class="QLabel" name="label_4">
+      <property name="text">
+       <string>Datenverkehr:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QComboBox" name="comboBox_BT_local_Bluetooth_Adapter"/>
+    </item>
+    <item row="2" column="5" rowspan="16">
+     <widget class="QProgressBar" name="progressBar_Contaner_1">
+      <property name="minimumSize">
+       <size>
+        <width>85</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="maximum">
+       <number>100</number>
+      </property>
+      <property name="value">
+       <number>90</number>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="format">
+       <string>%p %</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="7">
+     <widget class="QLabel" name="label_7">
+      <property name="text">
+       <string>Behälter 3</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QLabel" name="label_BT_headline">
+      <property name="font">
+       <font>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Bluetooth:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="8" rowspan="16">
+     <widget class="QProgressBar" name="progressBar_Contaner_4">
+      <property name="minimumSize">
+       <size>
+        <width>85</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="maximum">
+       <number>100</number>
+      </property>
+      <property name="value">
+       <number>24</number>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="format">
+       <string>%p %</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="0">
+     <widget class="QLabel" name="label_status">
+      <property name="text">
+       <string>getrennt</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="5" colspan="4">
+     <widget class="QLabel" name="label_3">
+      <property name="font">
+       <font>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Füllstatus:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="6" rowspan="16">
+     <widget class="QProgressBar" name="progressBar_Contaner_2">
+      <property name="minimumSize">
+       <size>
+        <width>85</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="maximum">
+       <number>100</number>
+      </property>
+      <property name="value">
+       <number>24</number>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="format">
+       <string>%p %</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="8">
+     <widget class="QLabel" name="label_8">
+      <property name="text">
+       <string>Behälter 4</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="3">
+     <widget class="QLabel" name="label_2">
+      <property name="font">
+       <font>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>verfügbare Mischungen:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="1">
+     <widget class="QLabel" name="label_BT_clients">
+      <property name="text">
+       <string>angemeldete Clienten:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="0">
+     <widget class="QLabel" name="label">
+      <property name="font">
+       <font>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>serielle Verbindung zu µC:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="6">
+     <widget class="QLabel" name="label_6">
+      <property name="text">
+       <string>Behälter 2</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="1">
+     <widget class="QLabel" name="label_BT_status_connection">
+      <property name="text">
+       <string>Status</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="QPushButton" name="pushButton_connect">
+      <property name="text">
+       <string>Verbinden</string>
+      </property>
+     </widget>
+    </item>
+    <item row="18" column="5">
+     <widget class="QPushButton" name="pushButton_fill_C1">
+      <property name="text">
+       <string>füllen</string>
+      </property>
+     </widget>
+    </item>
+    <item row="18" column="6">
+     <widget class="QPushButton" name="pushButton_fill_C2">
+      <property name="text">
+       <string>füllen</string>
+      </property>
+     </widget>
+    </item>
+    <item row="18" column="7">
+     <widget class="QPushButton" name="pushButton_fill_C3">
+      <property name="text">
+       <string>füllen</string>
+      </property>
+     </widget>
+    </item>
+    <item row="18" column="8">
+     <widget class="QPushButton" name="pushButton_fill_C4">
+      <property name="text">
+       <string>füllen</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="3" rowspan="18">
+     <widget class="QListWidget" name="listWidget"/>
+    </item>
+    <item row="5" column="1" rowspan="14">
+     <widget class="QListWidget" name="listWidget_BT_Clienten"/>
+    </item>
+    <item row="18" column="0">
+     <widget class="QPushButton" name="pushButton_clearSerialTraffic">
+      <property name="text">
+       <string>Clear</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="0" rowspan="13">
+     <widget class="QListWidget" name="listWidget_serial_traffic">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>0</height>
+       </size>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1100</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuOptionen">
+    <property name="title">
+     <string>Optionen</string>
+    </property>
+    <addaction name="actionEinstellungen"/>
+    <addaction name="actionMischungen_bearbeiten"/>
+    <addaction name="separator"/>
+    <addaction name="actionBeenden"/>
+   </widget>
+   <widget class="QMenu" name="menuHilfe">
+    <property name="title">
+     <string>Hilfe</string>
+    </property>
+    <addaction name="action_ber"/>
+   </widget>
+   <addaction name="menuOptionen"/>
+   <addaction name="menuHilfe"/>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionMischungen_bearbeiten">
+   <property name="text">
+    <string>Mischungen bearbeiten</string>
+   </property>
+  </action>
+  <action name="action_ber">
+   <property name="text">
+    <string>Über</string>
+   </property>
+  </action>
+  <action name="actionBeenden">
+   <property name="text">
+    <string>Beenden</string>
+   </property>
+  </action>
+  <action name="actionEinstellungen">
+   <property name="text">
+    <string>Einstellungen</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>
