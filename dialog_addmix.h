@@ -1,4 +1,4 @@
-/* ###########################################################################################################
+/* ####################################################################################
  * Projekt:		Diplomarbeit: Autmatische Abfüllanlage
  * Host:		Raspberry PI 3B
  * Filename:	dialog_addmix.h
@@ -6,11 +6,7 @@
  * Entwickler:	Wögerbauer Stefan
  * E-Mail:		woegste@hotmail.com
  *
- * Änderungen:
- * Name:	Datum:	Zeit:	Änderung:
- *
- *
- * ##########################################################################################################
+ * ####################################################################################
  */
 
 #ifndef DIALOG_ADDMIX_H
@@ -42,8 +38,16 @@ public slots:
 	int getAmount_container_3(void);
 	int getAmount_container_4(void);
 	void setName(QString name);
-	void setContainerNames(QString Container_1, QString Container_2, QString Container_3, QString Container_4);
-	void setAmout_Containers(int Container_1, int Container_2, int Container_3, int Container_4);
+	void setContainerNames(QString Container_1,
+						   QString Container_2,
+						   QString Container_3,
+						   QString Container_4);
+
+	void setAmout_Containers(int Container_1,
+							 int Container_2,
+							 int Container_3,
+							 int Container_4);
+
 	void setMaxVolume(int volume);
 	void calculateDiff(void);
 

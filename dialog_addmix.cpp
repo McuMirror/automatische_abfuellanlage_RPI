@@ -1,12 +1,12 @@
-/* ###########################################################################################################
+/* #####################################################################################
  * Projekt:		Diplomarbeit: Autmatische Abfüllanlage
  * Host:		Raspberry PI 3B
- * Filename:	Dialog_addMix.c
+ * Filename:	Dialog_addMix.cpp
  *
  * Entwickler:	Wögerbauer Stefan
  * E-Mail:		woegste@hotmail.com
  *
- * ##########################################################################################################
+ * #####################################################################################
  */
 
 
@@ -39,14 +39,17 @@ void Dialog_addMix::on_pushButton_OK_clicked()
 	setName(ui->lineEdit_name->text());
 	if(name.length() == 0)
 	{
-		QMessageBox::critical(this, "Automatische Abfüllanlage", "Bitte geben Sie einen Namen ein.");
+		QMessageBox::critical(this, "Automatische Abfüllanlage",
+							  "Bitte geben Sie einen Namen ein.");
 	}
 	else
 	{
 		if((ui->spinBox_container_1->value() + ui->spinBox_container_2->value() +
-			ui->spinBox_container_3->value() + ui->spinBox_container_4->value()) > maxVolume)
+			ui->spinBox_container_3->value() + ui->spinBox_container_4->value())
+				> maxVolume)
 		{
-			QMessageBox::critical(this, "Automatische Abfüllanlage", "Die maximale Füllmenge darf nicht überschritten werden");
+			QMessageBox::critical(this, "Automatische Abfüllanlage",
+							"Die maximale Füllmenge darf nicht überschritten werden");
 		}
 		else
 		{
@@ -91,7 +94,8 @@ int Dialog_addMix::getAmount_container_4(void)
 	return ui->spinBox_container_4->value();
 }
 
-void Dialog_addMix::setContainerNames(QString Container_1, QString Container_2, QString Container_3, QString Container_4)
+void Dialog_addMix::setContainerNames(QString Container_1, QString Container_2,
+									  QString Container_3, QString Container_4)
 {
 	ui->label_container_1->setText(Container_1);
 	ui->label_container_2->setText(Container_2);
@@ -99,7 +103,8 @@ void Dialog_addMix::setContainerNames(QString Container_1, QString Container_2, 
 	ui->label_container_4->setText(Container_4);
 }
 
-void Dialog_addMix::setAmout_Containers(int Container_1, int Container_2, int Container_3, int Container_4)
+void Dialog_addMix::setAmout_Containers(int Container_1, int Container_2,
+										int Container_3, int Container_4)
 {
 	ui->spinBox_container_1->setValue(Container_1);
 	ui->spinBox_container_2->setValue(Container_2);
@@ -115,10 +120,13 @@ void Dialog_addMix::setMaxVolume(int volume)
 void Dialog_addMix::calculateDiff(void)
 {
 	if((ui->spinBox_container_1->value() + ui->spinBox_container_2->value() +
-		ui->spinBox_container_3->value() + ui->spinBox_container_4->value()) > maxVolume)
+		ui->spinBox_container_3->value() + ui->spinBox_container_4->value()) >maxVolume)
 	{
-		QMessageBox::critical(this, "Automatische Abfüllanlage", "Die maximale Füllmenge wurde Überschritten");
+		QMessageBox::critical(this, "Automatische Abfüllanlage",
+							  "Die maximale Füllmenge wurde Überschritten");
 	}
-	ui->label_diff->setText(QString::number(maxVolume - ui->spinBox_container_1->value() + ui->spinBox_container_2->value() +
-											ui->spinBox_container_3->value() + ui->spinBox_container_4->value()));
+	ui->label_diff->setText(QString::number(maxVolume - ui->spinBox_container_1->value()
+											+ ui->spinBox_container_2->value()
+											+ ui->spinBox_container_3->value()
+											+ ui->spinBox_container_4->value()));
 }

@@ -3,6 +3,14 @@
 # Project created by QtCreator 2016-11-04T17:11:01
 #
 #-------------------------------------------------
+######################################################################################
+#Projekt:	Diplomarbeit: Autmatische Abfüllanlage
+#Host:		Raspberry PI 3B
+#
+#Entwickler:	Wögerbauer Stefan
+#E-Mail:	woegste@hotmail.com
+#
+######################################################################################
 
 QT       += core
 QT       += gui
@@ -37,3 +45,6 @@ FORMS    += mainwindow.ui \
 	    dialog_addmix.ui
 
 RESOURCES +=
+
+DISTFILES += \
+    LICENSE.md

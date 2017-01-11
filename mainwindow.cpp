@@ -1,7 +1,7 @@
-﻿/* ###########################################################################################################
+﻿/* #####################################################################################
  * Projekt:		Diplomarbeit: Autmatische Abfüllanlage
  * Host:		Raspberry PI 3B
- * Filename:	mainwindow.c
+ * Filename:	mainwindow.cpp
  *
  * Entwickler:	Wögerbauer Stefan
  * E-Mail:		woegste@hotmail.com
@@ -10,15 +10,18 @@
  * Name:	Datum:		Zeit[h]:	Änderung:
  *
  * WS		05.11.2016	1			Projekt anlgen,
- * WS		06.11.2016	4			Serielle Schnittstelle hinzugefügt, sämtliche Fenster erstellt
- * WS		07.11.2016	6			Programmieren der Klasse mixture sowie erstellen der Logik für das Löschen,
+ * WS		06.11.2016	4			Serielle Schnittstelle hinzugefügt, sämtliche
+ *									Fenster erstellt
+ * WS		07.11.2016	6			Programmieren der Klasse mixture sowie erstellen
+ *									der Logik für das Löschen,
  *									Bearbeiten und Erstellen mon Mischungen
- *									Konfigurieren der seriellen SChnittstelle sowie senden von Daten
+ *									Konfigurieren der seriellen SChnittstelle sowie
+ *									senden von Daten
  * WS		9.11.2016	2			Begonnen Bluetooth Kommunikation herzustellen
- * ##########################################################################################################
+ * #####################################################################################
  */
 
-//********************** INCLUDES *************************************************
+//********************** INCLUDES ******************************************************
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "menu.h"
@@ -47,12 +50,13 @@
 #include <QSerialPort>
 #include <QSerialPortInfo>
 
-//*********************** MACROS **************************************************
+//*********************** MACROS *******************************************************
 
 #define serialTimeOutTime_ms 100
-#define Bluetooth 1			// 1 wenn Bluetooth im Programm entahlten sein soll, ansonsten 0 -> Dies muss auch im Header gesetzt werden
+#define Bluetooth 1			// 1 wenn Bluetooth im Programm entahlten sein soll,
+							//ansonsten 0 -> Dies muss auch im Header gesetzt werden
 
-//**********************************************************************************
+//**************************************************************************************
 
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
@@ -60,9 +64,10 @@ MainWindow::MainWindow(QWidget *parent) :
 {
 	ui->setupUi(this);
 
+	//Update time all second
 	clockTimer = new QTimer(this);
 	clockTimer->start(1000);
-	connect(clockTimer, SIGNAL(timeout()),	 this, SLOT(updateTime()));			//Update time all second
+	connect(clockTimer, SIGNAL(timeout()),	 this, SLOT(updateTime()));
 
 	serialTimeOut= new QTimer(this);
 	serialTimeOut->setSingleShot(true);
@@ -72,7 +77,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	screenWidth  = screen->availableSize().width();
 	screenHeight = screen->availableSize().height();
 
-	//**************** BLUETOOTH **************************************************************************************************
+	//**************** BLUETOOTH *******************************************************
 
 #if Bluetooth
 
@@ -90,11 +95,15 @@ MainWindow::MainWindow(QWidget *parent) :
 	{
 		for(int i=0; i < localBluetoothAdapters.size(); i++)
 		{
-			ui->comboBox_BT_local_Bluetooth_Adapter->addItem(localBluetoothAdapters.at(i).name());
+			ui->comboBox_BT_local_Bluetooth_Adapter->
+					addItem(localBluetoothAdapters.at(i).name());
 		}
 
-		QBluetoothLocalDevice localDevice (localBluetoothAdapters.at(ui->comboBox_BT_local_Bluetooth_Adapter->currentIndex()).address());
-		ui->label_BT_status_connection->setText("Adresse: " + localDevice.address().toString());
+		QBluetoothLocalDevice localDevice (localBluetoothAdapters.at(
+					ui->comboBox_BT_local_Bluetooth_Adapter->currentIndex()).address());
+
+		ui->label_BT_status_connection->
+				setText("Adresse: " + localDevice.address().toString());
 
 		if(localDevice.hostMode() == QBluetoothLocalDevice::HostPoweredOff)
 		{
@@ -112,13 +121,16 @@ MainWindow::MainWindow(QWidget *parent) :
 
 		BluetoothServer = new BluetoothTransmissionServer(this);
 
-		//******* CONNECTS ******************************************************************************************
+		//******* CONNECTS *************************************************************
 
-		connect(BluetoothServer,	SIGNAL(clientConnected(QString)),           this,	SLOT(clientConnected(QString)));
-		connect(BluetoothServer,	SIGNAL(clientDisconnected(QString)),        this,	SLOT(clientDisconnected(QString)));
-		connect(BluetoothServer,	SIGNAL(messageReceived(QString,QString)),   this,	SLOT(BluetoothCommandReceived(QString,QString)));
+		connect(BluetoothServer,	SIGNAL(clientConnected(QString)),           this,
+				SLOT(clientConnected(QString)));
+		connect(BluetoothServer,	SIGNAL(clientDisconnected(QString)),        this,
+				SLOT(clientDisconnected(QString)));
+		connect(BluetoothServer,	SIGNAL(messageReceived(QString,QString)),   this,
+				SLOT(BluetoothCommandReceived(QString,QString)));
 
-		//***********************************************************************************************************
+		//******************************************************************************
 
 		BluetoothServer->startServer();
 	}
@@ -132,15 +144,19 @@ MainWindow::MainWindow(QWidget *parent) :
 	ui->comboBox_BT_local_Bluetooth_Adapter->setVisible(false);
 
 #endif
-	//*************************************************************************************************************************
+	//**********************************************************************************
 
 	readMixtures();
 	writeListWidget();
 
-	setConatinerAmounts(100 * ((double)settings.value("ContainerVolume_1", "").toInt() / (double)settings.value("ContainerVolume", "").toInt()),
-						100 * ((double)settings.value("ContainerVolume_2", "").toInt() / (double)settings.value("ContainerVolume", "").toInt()),
-						100 * ((double)settings.value("ContainerVolume_3", "").toInt() / (double)settings.value("ContainerVolume", "").toInt()),
-						100 * ((double)settings.value("ContainerVolume_4", "").toInt() / (double)settings.value("ContainerVolume", "").toInt()));
+	setConatinerAmounts(100 * ((double)settings.value("ContainerVolume_1", "").toInt() /
+							   (double)settings.value("ContainerVolume", "").toInt()),
+						100 * ((double)settings.value("ContainerVolume_2", "").toInt() /
+							   (double)settings.value("ContainerVolume", "").toInt()),
+						100 * ((double)settings.value("ContainerVolume_3", "").toInt() /
+							   (double)settings.value("ContainerVolume", "").toInt()),
+						100 * ((double)settings.value("ContainerVolume_4", "").toInt() /
+							   (double)settings.value("ContainerVolume", "").toInt()));
 }
 
 MainWindow::~MainWindow()
@@ -171,8 +187,10 @@ void MainWindow::on_actionMischungen_bearbeiten_triggered()
 	Menu_Mix menu_mix;
 	menu_mix.setWindowTitle("Mischungen bearbeiten");
 
-	menu_mix.setContainerNames(settings.value("ContainerName_1", "").toString(), settings.value("ContainerName_2", "").toString(),
-							   settings.value("ContainerName_3", "").toString(), settings.value("ContainerName_4", "").toString());
+	menu_mix.setContainerNames(settings.value("ContainerName_1", "").toString(),
+							   settings.value("ContainerName_2", "").toString(),
+							   settings.value("ContainerName_3", "").toString(),
+							   settings.value("ContainerName_4", "").toString());
 
 	menu_mix.setMixtures(mixtures);
 	menu_mix.setMaxVolume(settings.value("MaxVolume","").toInt());
@@ -187,7 +205,8 @@ void MainWindow::on_actionMischungen_bearbeiten_triggered()
 
 void MainWindow::on_action_ber_triggered()
 {
-	QMessageBox::information(this, "Automatische Abfüllanlage", "Version: 0.1\nEntwickler: Stefan Wögerbauer");
+	QMessageBox::information(this, "Automatische Abfüllanlage",
+							 "Version: 0.1\nEntwickler: Stefan Wögerbauer");
 }
 
 void MainWindow::on_actionBeenden_triggered()
@@ -200,8 +219,10 @@ void MainWindow::on_actionEinstellungen_triggered()
 	menu Menu;
 	Menu.setWindowTitle("Einstellungen");
 
-	Menu.setContainerNames(settings.value("ContainerName_1", "").toString(), settings.value("ContainerName_2", "").toString(),
-						   settings.value("ContainerName_3", "").toString(), settings.value("ContainerName_4", "").toString());
+	Menu.setContainerNames(settings.value("ContainerName_1", "").toString(),
+						   settings.value("ContainerName_2", "").toString(),
+						   settings.value("ContainerName_3", "").toString(),
+						   settings.value("ContainerName_4", "").toString());
 	Menu.setMaxVolume(settings.value("MaxVolume","").toInt());
 	Menu.setContainerVolume(settings.value("ContainerVolume", "").toInt());
 
@@ -214,24 +235,32 @@ void MainWindow::on_actionEinstellungen_triggered()
 		settings.setValue("MaxVolume",		 Menu.getMaxVolume());
 		settings.setValue("ContainerVolume", Menu.getContainerVolume());
 
-		if(settings.value("ContainerVolume_1", "").toInt() > settings.value("ContainerVolume", "").toInt())
+		if(settings.value("ContainerVolume_1", "").toInt() >
+				settings.value("ContainerVolume", "").toInt())
 		{
-			settings.setValue("ContainerVolume_1", settings.value("ContainerVolume", "").toInt());
+			settings.setValue("ContainerVolume_1",
+							  settings.value("ContainerVolume", "").toInt());
 		}
 
-		if(settings.value("ContainerVolume_2", "").toInt() > settings.value("ContainerVolume", "").toInt())
+		if(settings.value("ContainerVolume_2", "").toInt() >
+				settings.value("ContainerVolume", "").toInt())
 		{
-			settings.setValue("ContainerVolume_2", settings.value("ContainerVolume", "").toInt());
+			settings.setValue("ContainerVolume_2",
+							  settings.value("ContainerVolume", "").toInt());
 		}
 
-		if(settings.value("ContainerVolume_3", "").toInt() > settings.value("ContainerVolume", "").toInt())
+		if(settings.value("ContainerVolume_3", "").toInt() >
+				settings.value("ContainerVolume", "").toInt())
 		{
-			settings.setValue("ContainerVolume_3", settings.value("ContainerVolume", "").toInt());
+			settings.setValue("ContainerVolume_3",
+							  settings.value("ContainerVolume", "").toInt());
 		}
 
-		if(settings.value("ContainerVolume_4", "").toInt() > settings.value("ContainerVolume", "").toInt())
+		if(settings.value("ContainerVolume_4", "").toInt() >
+				settings.value("ContainerVolume", "").toInt())
 		{
-			settings.setValue("ContainerVolume_4", settings.value("ContainerVolume", "").toInt());
+			settings.setValue("ContainerVolume_4",
+							  settings.value("ContainerVolume", "").toInt());
 		}
 		calculateContainerVolumes(0, 0, 0, 0);
 	}
@@ -242,7 +271,6 @@ void MainWindow::sendSerialCommand(QString sender ,QString command)
 	serial.write(command.toLocal8Bit() + '\n');
 
 	serialTimeOut->start(serialTimeOutTime_ms);
-
 
 	QString time;
 	time = QDateTime::currentDateTime().toString("hh:mm:ss");
@@ -272,23 +300,27 @@ void MainWindow::readSerialCommand(void)
 
 	if(commandSended == true && response == "received")
 	{
-		currentlyWorking = true;
-		commandSended = false;
-		commandReceived = true;
+		currentlyWorking =	true;
+		commandSended =		false;
+		commandReceived =	true;
+
+		qDebug() << "serial command received";
 	}
 
 	if(commandReceived == true && response == "ready")
 	{
-		currentlyWorking = false;
-		commandReceived = false;
+		currentlyWorking =	false;
+		commandReceived =	false;
+
+		qDebug() << "ready for next drink";
 	}
-	//******************************************************************
+	//**********************************************************************************
 	//Bluetooth
 	if(localBluetoothAdapters.size() == 0)
 	{
 		BluetoothServer->sendMessage(response);
 	}
-	//******************************************************************
+	//**********************************************************************************
 
 
 	//TODO: Timout -> send again
@@ -298,6 +330,17 @@ void MainWindow::readSerialCommand(void)
 
 void MainWindow::on_pushButton_connect_clicked()
 {
+	/*
+	 * open the serial Port
+	 *
+	 * Port Name:	User choose the correct Port, on the RPI it's "dev/tty/S0"
+	 * Baudrate:	4800
+	 * Parity:		No Parity Bit
+	 * Data lenght:	8 Bit
+	 * Port Mode:	Read and Write
+	 *
+	 */
+
 	static int i=0;
 
 	if(i%2 == 0)
@@ -315,7 +358,8 @@ void MainWindow::on_pushButton_connect_clicked()
 		{
 			qDebug() << "can't open serial Port";
 			QMessageBox::critical(this, "Automatische Abfüllanlage",
-								  tr("%1 konnte nicht geöffnet werden, error code: %2").arg(serial.portName()).arg(serial.error()));
+								  tr("%1 konnte nicht geöffnet werden, error code: %2")
+								  .arg(serial.portName()).arg(serial.error()));
 
 			return;
 		}
@@ -324,7 +368,8 @@ void MainWindow::on_pushButton_connect_clicked()
 			ui->pushButton_connect->setText("Trennen");
 			ui->comboBox_serial->setEnabled(false);
 			qDebug()<< "connect to serial Port";
-			ui->label_status->setText(tr("Verbunden mit Port: %1").arg(ui->comboBox_serial->currentText()));
+			ui->label_status->setText(tr("Verbunden mit Port: %1")
+									  .arg(ui->comboBox_serial->currentText()));
 		}
 
 		i++;
@@ -342,12 +387,20 @@ void MainWindow::on_pushButton_connect_clicked()
 
 void MainWindow::on_pushButton_clearSerialTraffic_clicked()
 {
+	/*
+	 * delete all text of the serial Data Traffic
+	 */
+
 	ui->listWidget_serial_traffic->clear();
 }
 
 void MainWindow::saveMixtures (void)
 {
-	settings.remove("MixtureList");
+	/*
+	 * store the different Mixes in QSettings
+	 */
+
+	settings.remove("MixtureList");				//delete the old List
 	settings.beginWriteArray("MixtureList");
 
 	for(int i=0; i<mixtures.size(); i++)
@@ -364,6 +417,13 @@ void MainWindow::saveMixtures (void)
 
 void MainWindow::readMixtures (void)
 {
+	/*
+	 * read the different Mixes from QSettings
+	 * store the values of the liquid amounts from each container and convert them into
+	 * integer, after save them in a QList
+	 * load the Name of the Mix and save them in a QList
+	 */
+
 	int size_Mixtures = settings.beginReadArray("MixtureList");
 
 	for(int i=0; i<size_Mixtures; i++)
@@ -372,16 +432,25 @@ void MainWindow::readMixtures (void)
 
 		mixtures.append(new mixture);
 		mixtures.last()->setName(settings.value("Name","").toString());
-		mixtures.last()->setAmountContainer_1(settings.value("Container_1", "").toInt());
-		mixtures.last()->setAmountContainer_2(settings.value("Container_2", "").toInt());
-		mixtures.last()->setAmountContainer_3(settings.value("Container_3", "").toInt());
-		mixtures.last()->setAmountContainer_4(settings.value("Container_4", "").toInt());
+		mixtures.last()->setAmountContainer_1(
+					settings.value("Container_1", "").toInt());
+		mixtures.last()->setAmountContainer_2(
+					settings.value("Container_2", "").toInt());
+		mixtures.last()->setAmountContainer_3(
+					settings.value("Container_3", "").toInt());
+		mixtures.last()->setAmountContainer_4(
+					settings.value("Container_4", "").toInt());
 	}
 	settings.endArray();
 }
 
 void MainWindow::writeListWidget(void)
 {
+	/*
+	 * write the List Widget
+	 * insert all Mixtures
+	 */
+
 	ui->listWidget->clear();
 
 	for(int i = 0; i<mixtures.size(); i++)
@@ -395,93 +464,167 @@ void MainWindow::writeListWidget(void)
 		item->setSizeHint(size);
 		ui->listWidget->addItem(item);
 		ui->listWidget->setItemWidget(item, button);
-		connect(button, SIGNAL(clicked(bool)), mixtures.at(i), SLOT(getCommandValues()));
-		connect(mixtures.at(i), SIGNAL(sendCommandValues(QList<int>)), this, SLOT(ButtonSlot(QList<int>)));
+
+		connect(button, SIGNAL(clicked(bool)), mixtures.at(i),
+				SLOT(getCommandValues()));
+		connect(mixtures.at(i), SIGNAL(sendCommandValues(QList<int>)), this,
+				SLOT(ButtonSlot(QList<int>)));
 	}
 }
 
 void MainWindow::ButtonSlot(QList<int> valueList)
 {
-		if(serial.isOpen() && currentlyWorking == false)
+	// if serial Port is open and the mashine isn't working send the new command
+	if(serial.isOpen() && currentlyWorking == false)
+	{
+		if(settings.value("ContainerVolume_1", "").toInt() - valueList.at(0) < 0)
 		{
-			if(settings.value("ContainerVolume_1", "").toInt() - valueList.at(0) < 0)
-			{
-				BluetoothServer->sendMessage("_Nicht genügend "  + settings.value("ContainerName_1","") .toString() +
-											 " in Behälter 1 vorhanden.\nBitte befüllen Sie "
-											   "diesen vollständig und klicken Sie auf den Button unter der Grafik des jeweiligen Behälters");
+			/*
+			 * Not enough liquid in container 1
+			 * sent this message to all Bluetooth Clients
+			 * also show it in the UI
+			 */
+
+			BluetoothServer->sendMessage("_Nicht genügend "  +
+									settings.value("ContainerName_1","") .toString() +
+									" in Behälter 1 vorhanden.\nBitte befüllen Sie "
+									"diesen vollständig und klicken Sie auf den Button "
+									"unter der Grafik des jeweiligen Behälters");
 
 
-				QMessageBox::critical(this, "Automatische Abfüllanlage", "Nicht genügend "  +
-									  settings.value("ContainerName_1","") .toString() + " in Behälter 1 vorhanden.\nBitte befüllen Sie "
-										"diesen vollständig und klicken Sie auf den Button unter der Grafik des jeweiligen Behälters");
+			QMessageBox::critical(this, "Automatische Abfüllanlage", "Nicht genügend " +
+								  settings.value("ContainerName_1","") .toString() +
+								  " in Behälter 1 vorhanden.\nBitte befüllen Sie "
+								  "diesen vollständig und klicken Sie auf den Button "
+								  "unter der Grafik des jeweiligen Behälters");
 
-			}
-			else if(settings.value("ContainerVolume_2", "").toInt() - valueList.at(0) < 0)
-			{
-				BluetoothServer->sendMessage("_Nicht genügend "  + settings.value("ContainerName_2","") .toString() +
-											 " in Behälter 2 vorhanden.\nBitte befüllen Sie "
-											   "diesen vollständig und klicken Sie auf den Button unter der Grafik des jeweiligen Behälters");
-
-
-				QMessageBox::critical(this, "Automatische Abfüllanlage", "Nicht genügend "  +
-									  settings.value("ContainerName_2","") .toString() + " in Behälter 2 vorhanden.\nBitte befüllen Sie "
-										"diesen vollständig und klicken Sie auf den Button unter der Grafik des jeweiligen Behälters");
-
-			}
-			else if(settings.value("ContainerVolume_3", "").toInt() - valueList.at(0) < 0)
-			{
-				BluetoothServer->sendMessage("_Nicht genügend "  + settings.value("ContainerName_3","") .toString() +
-											 " in Behälter 3 vorhanden.\nBitte befüllen Sie "
-											   "diesen vollständig und klicken Sie auf den Button unter der Grafik des jeweiligen Behälters");
-
-
-				QMessageBox::critical(this, "Automatische Abfüllanlage", "Nicht genügend "  +
-									  settings.value("ContainerName_3","") .toString() + " in Behälter 3 vorhanden.\nBitte befüllen Sie "
-										"diesen vollständig und klicken Sie auf den Button unter der Grafik des jeweiligen Behälters");
-			}
-			else if(settings.value("ContainerVolume_4", "").toInt() - valueList.at(0) < 0)
-			{
-				BluetoothServer->sendMessage("_Nicht genügend "  + settings.value("ContainerName_4","") .toString() +
-											 " in Behälter 4 vorhanden.\nBitte befüllen Sie "
-											   "diesen vollständig und klicken Sie auf den Button unter der Grafik des jeweiligen Behälters");
-
-				QMessageBox::critical(this, "Automatische Abfüllanlage", "Nicht genügend "  +
-									  settings.value("ContainerName_4","") .toString() + " in Behälter 4 vorhanden.\nBitte befüllen Sie "
-										"diesen vollständig und klicken Sie auf den Button unter der Grafik des jeweiligen Behälters");
-			}
-			else
-			{
-				sendSerialCommand("Host",	"/" + QString("%1").arg(valueList.at(0),2,'g',-1,'0') + "/" + QString("%1").arg(valueList.at(1),2,'g',-1,'0') +
-								  "/" + QString("%1").arg(valueList.at(2),2,'g',-1,'0') + "/" + QString("%1").arg(valueList.at(3),2,'g',-1,'0') + "/");
-
-				commandSended = true;
-
-				calculateContainerVolumes(valueList.at(0), valueList.at(1), valueList.at(2), valueList.at(3));
-			}
 		}
-		else if(!serial.isOpen())
+		else if(settings.value("ContainerVolume_2", "").toInt() - valueList.at(0) < 0)
 		{
-			BluetoothServer->sendMessage("_Bitte stellen Sie eine Verbindung zur Anlage her");
-			QMessageBox::critical(this, "Automatische Anfüllanlage", "Bitte stellen Sie eine Verbindung zur Anlage her");	
+			/*
+			 * Not enough liquid in container 2
+			 * sent this message to all Bluetooth Clients
+			 * also show it in the UI
+			 */
+
+			BluetoothServer->sendMessage("_Nicht genügend "  +
+									settings.value("ContainerName_2","") .toString() +
+									" in Behälter 2 vorhanden.\nBitte befüllen Sie "
+									"diesen vollständig und klicken Sie auf den Button "
+									"unter der Grafik des jeweiligen Behälters");
+
+
+			QMessageBox::critical(this, "Automatische Abfüllanlage", "Nicht genügend " +
+									settings.value("ContainerName_2","") .toString() +
+									" in Behälter 2 vorhanden.\nBitte befüllen Sie "
+									"diesen vollständig und klicken Sie auf den Button "
+									"unter der Grafik des jeweiligen Behälters");
+
 		}
-		else if(currentlyWorking == true)
+		else if(settings.value("ContainerVolume_3", "").toInt() - valueList.at(0) < 0)
 		{
-			BluetoothServer->sendMessage("_Bitte warten Sie bis der Vorgang abgeschlossen ist.");
-			QMessageBox::critical(this, "Automatische Anfüllanlage", "Bitte warten Sie bis der Vorgang abgeschlossen ist.");	
+			/*
+			 * Not enough liquid in container 3
+			 * sent this message to all Bluetooth Clients
+			 * also show it in the UI
+			 */
+
+			BluetoothServer->sendMessage("_Nicht genügend "  +
+									settings.value("ContainerName_3","") .toString() +
+									" in Behälter 3 vorhanden.\nBitte befüllen Sie "
+									"diesen vollständig und klicken Sie auf den Button "
+									"unter der Grafik des jeweiligen Behälters");
+
+
+			QMessageBox::critical(this, "Automatische Abfüllanlage", "Nicht genügend " +
+									settings.value("ContainerName_3","") .toString() +
+									" in Behälter 3 vorhanden.\nBitte befüllen Sie "
+									"diesen vollständig und klicken Sie auf den Button "
+									"unter der Grafik des jeweiligen Behälters");
+		}
+		else if(settings.value("ContainerVolume_4", "").toInt() - valueList.at(0) < 0)
+		{
+			/*
+			 * Not enough liquid in container 4
+			 * sent this message to all Bluetooth Clients
+			 * also show it in the UI
+			 */
+
+			BluetoothServer->sendMessage("_Nicht genügend "  +
+									settings.value("ContainerName_4","") .toString() +
+									" in Behälter 4 vorhanden.\nBitte befüllen Sie "
+									"diesen vollständig und klicken Sie auf den Button "
+									"unter der Grafik des jeweiligen Behälters");
+
+			QMessageBox::critical(this, "Automatische Abfüllanlage", "Nicht genügend " +
+									settings.value("ContainerName_4","") .toString() +
+									" in Behälter 4 vorhanden.\nBitte befüllen Sie "
+									"diesen vollständig und klicken Sie auf den Button "
+									"unter der Grafik des jeweiligen Behälters");
 		}
 		else
 		{
-			BluetoothServer->sendMessage("_Ein unbekannter Fehler ist aufgetreten");
-			QMessageBox::critical(this, "Automatische Anfüllanlage", "unbekannter Fehler");
+			/*
+			 * send the values of the mix to the maschine
+			 */
+
+			sendSerialCommand("Host",	"/" +
+							  QString("%1").arg(valueList.at(0),2,'g',-1,'0') + "/" +
+							  QString("%1").arg(valueList.at(1),2,'g',-1,'0') + "/" +
+							  QString("%1").arg(valueList.at(2),2,'g',-1,'0') + "/" +
+							  QString("%1").arg(valueList.at(3),2,'g',-1,'0') + "/");
+
+			commandSended = true;
+
+			//calculate the new container values
+			calculateContainerVolumes(valueList.at(0),
+									  valueList.at(1),
+									  valueList.at(2),
+									  valueList.at(3));
 		}
+	}
+	else if(!serial.isOpen())
+	{
+		/*
+		 * serial Port isn't open
+		 */
+
+		BluetoothServer->sendMessage(
+					"_Bitte stellen Sie eine Verbindung zur Anlage her");
+		QMessageBox::critical(this, "Automatische Anfüllanlage",
+							  "Bitte stellen Sie eine Verbindung zur Anlage her");
+	}
+	else if(currentlyWorking == true)
+	{
+		/*
+		 * maschine is working
+		 */
+
+		BluetoothServer->sendMessage(
+					"_Bitte warten Sie bis der Vorgang abgeschlossen ist.");
+		QMessageBox::critical(this, "Automatische Anfüllanlage",
+							  "Bitte warten Sie bis der Vorgang abgeschlossen ist.");
+	}
+	else
+	{
+		/*
+		 * unknown error
+		 */
+
+		BluetoothServer->sendMessage("_Ein unbekannter Fehler ist aufgetreten");
+		QMessageBox::critical(this, "Automatische Anfüllanlage", "unbekannter Fehler");
+	}
 }
 
 void MainWindow::on_comboBox_BT_local_Bluetooth_Adapter_currentIndexChanged(int index)
 {
 	//BluetoothServer->stopServer();
 
-	QBluetoothLocalDevice localDevice (localBluetoothAdapters.at(ui->comboBox_BT_local_Bluetooth_Adapter->currentIndex()).address());
-	ui->label_BT_status_connection->setText("Adresse: " + localDevice.address().toString());
+	QBluetoothLocalDevice localDevice (localBluetoothAdapters.at(
+					ui->comboBox_BT_local_Bluetooth_Adapter->currentIndex()).address());
+
+	ui->label_BT_status_connection->setText(
+				"Adresse: "+localDevice.address().toString());
 
 	if(localDevice.hostMode() == QBluetoothLocalDevice::HostPoweredOff)
 	{
@@ -500,6 +643,10 @@ void MainWindow::on_comboBox_BT_local_Bluetooth_Adapter_currentIndexChanged(int 
 
 void MainWindow::clientConnected(const QString &name)
 {
+	/*
+	 * Client connected
+	 */
+
 	QListWidgetItem *item = new QListWidgetItem;
 	item->setText(name);
 
@@ -508,11 +655,17 @@ void MainWindow::clientConnected(const QString &name)
 
 void MainWindow::clientDisconnected(const QString &name)
 {
-	QMessageBox::information(this, "Automatische Abfüllanlage", name + " hat die Verbindung getrennt!");
+	/*
+	 * Client disconnected
+	 */
+
+	QMessageBox::information(this, "Automatische Abfüllanlage",
+							 name + " hat die Verbindung getrennt!");
 }
 
 void MainWindow::BluetoothCommandReceived(QString client, QString command)
 {
+	//command begins with "/"
 	if(command.at(0) == '/')
 	{
 		int count;
@@ -539,6 +692,7 @@ void MainWindow::BluetoothCommandReceived(QString client, QString command)
 			//BluetoothServer->sendMessage("_ERROR");
 		}
 	}
+	//command begins with "_" it's a informaion Request
 	else if(command.at(0) == '_')
 	{
 		//TODO: send back information via Bluetooth
@@ -552,7 +706,8 @@ void MainWindow::BluetoothCommandReceived(QString client, QString command)
 	{
 		//TODO: send back error via Bluetooth
 
-		QMessageBox::critical(this, "Automatische Abfüllanlage", "Error: Befehl konnte nicht gelesen werden");
+		QMessageBox::critical(this, "Automatische Abfüllanlage",
+							  "Error: Befehl konnte nicht gelesen werden");
 	}
 }
 
@@ -567,7 +722,10 @@ void MainWindow::sendMixes(void)
 
 #endif
 
-void MainWindow::setConatinerAmounts(int Container_1, int Container_2, int Container_3, int Container_4)
+void MainWindow::setConatinerAmounts(int Container_1,
+									 int Container_2,
+									 int Container_3,
+									 int Container_4)
 {
 	ui->progressBar_Contaner_1->setValue(Container_1);
 	ui->progressBar_Contaner_2->setValue(Container_2);
@@ -575,41 +733,95 @@ void MainWindow::setConatinerAmounts(int Container_1, int Container_2, int Conta
 	ui->progressBar_Contaner_4->setValue(Container_4);
 }
 
-void MainWindow::calculateContainerVolumes(int ConsumtionContainer_1, int ConsumtionContainer_2, int ConsumtionContainer_3, int ConsumtionContainer_4)
+void MainWindow::calculateContainerVolumes(int ConsumtionContainer_1,
+										   int ConsumtionContainer_2,
+										   int ConsumtionContainer_3,
+										   int ConsumtionContainer_4)
 {
-	settings.setValue("ContainerVolume_1", settings.value("ContainerVolume_1", "").toInt() - ConsumtionContainer_1);
-	settings.setValue("ContainerVolume_2", settings.value("ContainerVolume_2", "").toInt() - ConsumtionContainer_2);
-	settings.setValue("ContainerVolume_3", settings.value("ContainerVolume_3", "").toInt() - ConsumtionContainer_3);
-	settings.setValue("ContainerVolume_4", settings.value("ContainerVolume_4", "").toInt() - ConsumtionContainer_4);
+	/*
+	 * calculate the new container liquid amounts with the stored amounts of the
+	 * different mixed
+	 *
+	 * Set the new container values
+	 */
 
-	setConatinerAmounts(100 * ((double)settings.value("ContainerVolume_1", "").toInt() / (double)settings.value("ContainerVolume", "").toInt()),
-						100 * ((double)settings.value("ContainerVolume_2", "").toInt() / (double)settings.value("ContainerVolume", "").toInt()),
-						100 * ((double)settings.value("ContainerVolume_3", "").toInt() / (double)settings.value("ContainerVolume", "").toInt()),
-						100 * ((double)settings.value("ContainerVolume_4", "").toInt() / (double)settings.value("ContainerVolume", "").toInt()));
+	settings.setValue("ContainerVolume_1",
+					  settings.value("ContainerVolume_1", "").toInt() -
+										ConsumtionContainer_1);
+	settings.setValue("ContainerVolume_2",
+					  settings.value("ContainerVolume_2", "").toInt() -
+										ConsumtionContainer_2);
+	settings.setValue("ContainerVolume_3",
+					  settings.value("ContainerVolume_3", "").toInt() -
+										ConsumtionContainer_3);
+	settings.setValue("ContainerVolume_4",
+					  settings.value("ContainerVolume_4", "").toInt() -
+										ConsumtionContainer_4);
+
+	setConatinerAmounts(100 * ((double)settings.value("ContainerVolume_1", "").toInt() /
+							   (double)settings.value("ContainerVolume", "").toInt()),
+						100 * ((double)settings.value("ContainerVolume_2", "").toInt() /
+							   (double)settings.value("ContainerVolume", "").toInt()),
+						100 * ((double)settings.value("ContainerVolume_3", "").toInt() /
+							   (double)settings.value("ContainerVolume", "").toInt()),
+						100 * ((double)settings.value("ContainerVolume_4", "").toInt() /
+							   (double)settings.value("ContainerVolume", "").toInt()));
 
 }
 
 void MainWindow::on_pushButton_fill_C1_clicked()
 {
-	settings.setValue("ContainerVolume_1", settings.value("ContainerVolume", "").toInt());
+	/*
+	 * Fill container 1
+	 * Set Value of the progress Bar 100, this value is in percent
+	 * This Button gets pressed when the container gets filled with some liquid
+	 * It is important that the container gets filled full
+	 */
+
+	settings.setValue("ContainerVolume_1",
+					  settings.value("ContainerVolume","").toInt());
 	ui->progressBar_Contaner_1->setValue(100);
 }
 
 void MainWindow::on_pushButton_fill_C2_clicked()
 {
-	settings.setValue("ContainerVolume_2", settings.value("ContainerVolume", "").toInt());
+	/*
+	 * Fill container 2
+	 * Set Value of the progress Bar 100, this value is in percent
+	 * This Button gets pressed when the container gets filled with some liquid
+	 * It is important that the container gets filled full
+	 */
+
+	settings.setValue("ContainerVolume_2",
+					  settings.value("ContainerVolume","").toInt());
 	ui->progressBar_Contaner_2->setValue(100);
 }
 
 void MainWindow::on_pushButton_fill_C3_clicked()
 {
-	settings.setValue("ContainerVolume_3", settings.value("ContainerVolume", "").toInt());
+	/*
+	 * Fill container 3
+	 * Set Value of the progress Bar 100, this value is in percent
+	 * This Button gets pressed when the container gets filled with some liquid
+	 * It is important that the container gets filled full
+	 */
+
+	settings.setValue("ContainerVolume_3",
+					  settings.value("ContainerVolume","").toInt());
 	ui->progressBar_Contaner_3->setValue(100);
 }
 
 void MainWindow::on_pushButton_fill_C4_clicked()
 {
-	settings.setValue("ContainerVolume_4", settings.value("ContainerVolume", "").toInt());
+	/*
+	 * Fill container 4
+	 * Set Value of the progress Bar 100, this value is in percent
+	 * This Button gets pressed when the container gets filled with some liquid
+	 * It is important that the container gets filled full
+	 */
+
+	settings.setValue("ContainerVolume_4",
+					  settings.value("ContainerVolume","").toInt());
 	ui->progressBar_Contaner_4->setValue(100);
 }
 

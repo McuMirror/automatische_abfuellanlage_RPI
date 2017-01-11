@@ -1,4 +1,4 @@
-/* ###########################################################################################################
+/* ####################################################################################
  * Projekt:		Diplomarbeit: Autmatische Abfüllanlage
  * Host:		Raspberry PI 3B
  * Filename:	mixture.h
@@ -6,11 +6,7 @@
  * Entwickler:	Wögerbauer Stefan
  * E-Mail:		woegste@hotmail.com
  *
- * Änderungen:
- * Name:	Datum:	Zeit:	Änderung:
- *
- *
- * ##########################################################################################################
+ * ####################################################################################
  */
 
 #ifndef MIXTURE_H
@@ -34,10 +30,10 @@ public slots:
 	void setAmountContainer_2(int amount);
 	void setAmountContainer_3(int amount);
 	void setAmountContainer_4(int amount);
-	int getAmountContainer_1(void);
-	int getAmountContainer_2(void);
-	int getAmountContainer_3(void);
-	int getAmountContainer_4(void);
+	int  getAmountContainer_1(void);
+	int  getAmountContainer_2(void);
+	int  getAmountContainer_3(void);
+	int  getAmountContainer_4(void);
 
 	void getCommandValues(void);
 

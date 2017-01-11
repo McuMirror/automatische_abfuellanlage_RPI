@@ -1,4 +1,4 @@
-/* ###########################################################################################################
+/* ####################################################################################
  * Projekt:		Diplomarbeit: Autmatische Abfüllanlage
  * Host:		Raspberry PI 3B
  * Filename:	mainwindow.h
@@ -6,11 +6,7 @@
  * Entwickler:	Wögerbauer Stefan
  * E-Mail:		woegste@hotmail.com
  *
- * Änderungen:
- * Name:	Datum:	Zeit:	Änderung:
- *
- *
- * ##########################################################################################################
+ * ####################################################################################
  */
 
 #ifndef MAINWINDOW_H
@@ -20,7 +16,6 @@
 #include "bluetoothtransmissionserver.h"
 
 #include <QMainWindow>
-
 #include <QTimer>
 #include <QByteArray>
 #include <QListWidgetItem>
@@ -67,8 +62,10 @@ private slots:
 	void writeListWidget(void);
 	void ButtonSlot(QList<int> valueList);
 	void on_comboBox_BT_local_Bluetooth_Adapter_currentIndexChanged(int index);
-	void setConatinerAmounts(int Container_1, int Container_2, int Container_3, int Container_4);
-	void calculateContainerVolumes(int ConsumtionContainer_1, int ConsumtionContainer_2, int ConsumtionContainer_3, int ConsumtionContainer_4);
+	void setConatinerAmounts(int Container_1, int Container_2, int Container_3,
+							 int Container_4);
+	void calculateContainerVolumes(int ConsumtionContainer_1, int ConsumtionContainer_2,
+								  int ConsumtionContainer_3, int ConsumtionContainer_4);
 	void on_pushButton_fill_C1_clicked();
 	void on_pushButton_fill_C2_clicked();
 	void on_pushButton_fill_C3_clicked();
@@ -85,7 +82,6 @@ private slots:
 	void BluetoothCommandReceived(QString client, QString command);
 	void sendMixes(void);
 #endif
-
 
 private:
 	Ui::MainWindow *ui;
@@ -111,7 +107,5 @@ private:
 	//Bluetooth
 	BluetoothTransmissionServer *BluetoothServer;
 	QList<QBluetoothHostInfo> localBluetoothAdapters;
-
 };
-
 #endif // MAINWINDOW_H

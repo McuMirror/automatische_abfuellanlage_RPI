@@ -1,12 +1,12 @@
-/* ###########################################################################################################
+/* ####################################################################################
  * Projekt:		Diplomarbeit: Autmatische Abfüllanlage
  * Host:		Raspberry PI 3B
- * Filename:	menu.c
+ * Filename:	menu.cpp
  *
  * Entwickler:	Wögerbauer Stefan
  * E-Mail:		woegste@hotmail.com
  *
- * ##########################################################################################################
+ * ####################################################################################
  */
 
 #include "menu.h"
@@ -55,7 +55,8 @@ QString menu::getContainerName_4(void)
 	return ui->lineEdit_container_4->text();
 }
 
-void menu::setContainerNames(QString Container_1, QString Container_2, QString Container_3, QString Container_4)
+void menu::setContainerNames(QString Container_1, QString Container_2,
+							 QString Container_3, QString Container_4)
 {
 	ui->lineEdit_container_1->setText(Container_1);
 	ui->lineEdit_container_2->setText(Container_2);

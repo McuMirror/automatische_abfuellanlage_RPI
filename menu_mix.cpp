@@ -1,12 +1,12 @@
-/* ###########################################################################################################
+/* ####################################################################################
  * Projekt:		Diplomarbeit: Autmatische Abfüllanlage
  * Host:		Raspberry PI 3B
- * Filename:	Menu_Mix.c
+ * Filename:	Menu_Mix.cpp
  *
  * Entwickler:	Wögerbauer Stefan
  * E-Mail:		woegste@hotmail.com
  *
- * ##########################################################################################################
+ * ####################################################################################
  */
 
 #include "menu_mix.h"
@@ -45,7 +45,8 @@ void Menu_Mix::on_pushButton_add_clicked()
 {
 	Dialog_addMix Add;
 	Add.setWindowTitle("Mischung hinzufügen");
-	Add.setContainerNames(ContainerName_1, ContainerName_2, ContainerName_3, ContainerName_4);
+	Add.setContainerNames(ContainerName_1, ContainerName_2, ContainerName_3,
+						  ContainerName_4);
 	Add.setMaxVolume(maxVolume);
 
 	mixtures_1.append(new mixture);
@@ -62,7 +63,8 @@ void Menu_Mix::on_pushButton_add_clicked()
 	writeTableWidget();
 }
 
-void Menu_Mix::setContainerNames(QString Container_1, QString Container_2, QString Container_3, QString Container_4)
+void Menu_Mix::setContainerNames(QString Container_1, QString Container_2,
+								 QString Container_3, QString Container_4)
 {
 	this->ContainerName_1 = Container_1;
 	this->ContainerName_2 = Container_2;
@@ -89,21 +91,33 @@ void Menu_Mix::writeTableWidget(void)
 
 	for(int i=0; i < mixtures_1.size(); i++)
 	{
-		QTableWidgetItem* nameItem		= new QTableWidgetItem(mixtures_1.at(i)->getName());
-		QTableWidgetItem* container_1	= new QTableWidgetItem(QString::number(mixtures_1.at(i)->getAmountContainer_1()) + " cl");
-		QTableWidgetItem* container_2	= new QTableWidgetItem(QString::number(mixtures_1.at(i)->getAmountContainer_2()) + " cl");
-		QTableWidgetItem* container_3	= new QTableWidgetItem(QString::number(mixtures_1.at(i)->getAmountContainer_3()) + " cl");
-		QTableWidgetItem* container_4	= new QTableWidgetItem(QString::number(mixtures_1.at(i)->getAmountContainer_4()) + " cl");
+		QTableWidgetItem* nameItem	= new QTableWidgetItem(mixtures_1.at(i)->getName());
+		QTableWidgetItem* container_1= new QTableWidgetItem(
+					QString::number(mixtures_1.at(i)->getAmountContainer_1()) + " cl");
+
+		QTableWidgetItem* container_2= new QTableWidgetItem(
+					QString::number(mixtures_1.at(i)->getAmountContainer_2()) + " cl");
+
+		QTableWidgetItem* container_3= new QTableWidgetItem(
+					QString::number(mixtures_1.at(i)->getAmountContainer_3()) + " cl");
+
+		QTableWidgetItem* container_4= new QTableWidgetItem(
+					QString::number(mixtures_1.at(i)->getAmountContainer_4()) + " cl");
 
 		int rows = ui->tableWidget->rowCount();
 		ui->tableWidget->setRowCount(rows+1);                     // increase row count
 		ui->tableWidget->setColumnCount(5);
 		ui->tableWidget->setRowHeight(rows, 30);
-		ui->tableWidget->setHorizontalHeaderItem(0, new QTableWidgetItem("Name"));
-		ui->tableWidget->setHorizontalHeaderItem(1, new QTableWidgetItem(ContainerName_1));
-		ui->tableWidget->setHorizontalHeaderItem(2, new QTableWidgetItem(ContainerName_2));
-		ui->tableWidget->setHorizontalHeaderItem(3, new QTableWidgetItem(ContainerName_3));
-		ui->tableWidget->setHorizontalHeaderItem(4, new QTableWidgetItem(ContainerName_4));
+		ui->tableWidget->setHorizontalHeaderItem(
+					0, new QTableWidgetItem("Name"));
+		ui->tableWidget->setHorizontalHeaderItem(
+					1, new QTableWidgetItem(ContainerName_1));
+		ui->tableWidget->setHorizontalHeaderItem(
+					2, new QTableWidgetItem(ContainerName_2));
+		ui->tableWidget->setHorizontalHeaderItem(
+					3, new QTableWidgetItem(ContainerName_3));
+		ui->tableWidget->setHorizontalHeaderItem(
+					4, new QTableWidgetItem(ContainerName_4));
 
 		ui->tableWidget->setItem(rows, 0, nameItem);
 		ui->tableWidget->setItem(rows, 1, container_1);
@@ -115,14 +129,19 @@ void Menu_Mix::writeTableWidget(void)
 
 void Menu_Mix::on_pushButton_edit_clicked()
 {
-	if((ui->tableWidget->rowCount() != 0) && (ui->tableWidget->selectedItems().size()==1))
+	if((ui->tableWidget->rowCount() !=0) &&(ui->tableWidget->selectedItems().size()==1))
 	{
 		Dialog_addMix Add;
 		Add.setWindowTitle("Mischung bearbeiten");
 		int index = ui->tableWidget->currentRow();
-		Add.setContainerNames(ContainerName_1, ContainerName_2, ContainerName_3, ContainerName_4);
-		Add.setAmout_Containers(mixtures_1.at(index)->getAmountContainer_1(), mixtures_1.at(index)->getAmountContainer_2(),
-								mixtures_1.at(index)->getAmountContainer_3(), mixtures_1.at(index)->getAmountContainer_4());
+		Add.setContainerNames(ContainerName_1,
+							  ContainerName_2,
+							  ContainerName_3,
+							  ContainerName_4);
+		Add.setAmout_Containers(mixtures_1.at(index)->getAmountContainer_1(),
+								mixtures_1.at(index)->getAmountContainer_2(),
+								mixtures_1.at(index)->getAmountContainer_3(),
+								mixtures_1.at(index)->getAmountContainer_4());
 		Add.setName(mixtures_1.at(index)->getName());
 		Add.setMaxVolume(maxVolume);
 
@@ -141,16 +160,18 @@ void Menu_Mix::on_pushButton_edit_clicked()
 
 void Menu_Mix::on_pushButton_delete_clicked()
 {
-	if((ui->tableWidget->rowCount() != 0) && (ui->tableWidget->selectedItems().size()==1))
+	if((ui->tableWidget->rowCount() !=0) &&(ui->tableWidget->selectedItems().size()==1))
 	{
 		int indexDelete = ui->tableWidget->currentRow();
 		QTableWidgetItem* ToDelete = ui->tableWidget->item(indexDelete, 0);
 		QString nameToDelete = ToDelete->text();
 
-		if(QMessageBox::question(this, tr("Mischung löschen"), tr("Wollen Sie die Mischung %1 wirklich löschen?").arg(nameToDelete))
+		if(QMessageBox::question(this, tr("Mischung löschen"),
+								 tr("Wollen Sie die Mischung %1 wirklich löschen?")
+								 .arg(nameToDelete))
 				== QMessageBox::Yes)
 		{
-			ui->tableWidget->removeRow(ui->tableWidget->currentRow());          //remove from QTableWidget
+			ui->tableWidget->removeRow(ui->tableWidget->currentRow());
 			qDebug()<<"Mischung löschen: "<< mixtures_1.at(indexDelete)->getName();
 			mixtures_1.removeAt(indexDelete);
 		}

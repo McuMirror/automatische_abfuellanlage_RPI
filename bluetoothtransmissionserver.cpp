@@ -48,7 +48,8 @@
 static const QLatin1String serviceUuid("e8e10f95-1a70-4b27-9ccf-02010264e9c8");
 //! [Service UUID]
 
-BluetoothTransmissionServer::BluetoothTransmissionServer(QObject *parent): QObject(parent), rfcommServer(0)
+BluetoothTransmissionServer::BluetoothTransmissionServer(QObject *parent):
+	QObject(parent), rfcommServer(0)
 {
 }
 
@@ -79,24 +80,25 @@ void BluetoothTransmissionServer::startServer(const QBluetoothAddress& localAdap
     }
     //! [Create the server]
 
-    //serviceInfo.setAttribute(QBluetoothServiceInfo::ServiceRecordHandle, (uint)0x00010010);
-
     //! [Class Uuuid must contain at least 1 entry]
     QBluetoothServiceInfo::Sequence classId;
 
     classId << QVariant::fromValue(QBluetoothUuid(QBluetoothUuid::SerialPort));
-    serviceInfo.setAttribute(QBluetoothServiceInfo::BluetoothProfileDescriptorList,classId);
+	serviceInfo.setAttribute(QBluetoothServiceInfo::BluetoothProfileDescriptorList,
+							 classId);
 
     classId.prepend(QVariant::fromValue(QBluetoothUuid(serviceUuid)));
 
     serviceInfo.setAttribute(QBluetoothServiceInfo::ServiceClassIds, classId);
-    serviceInfo.setAttribute(QBluetoothServiceInfo::BluetoothProfileDescriptorList,classId);
+	serviceInfo.setAttribute(QBluetoothServiceInfo::BluetoothProfileDescriptorList,
+							 classId);
     //! [Class Uuuid must contain at least 1 entry]
 
     //! [Service name, description and provider]
-    serviceInfo.setAttribute(QBluetoothServiceInfo::ServiceName, tr("Bt Chat Server"));
-    serviceInfo.setAttribute(QBluetoothServiceInfo::ServiceDescription,tr("Example bluetooth chat server"));
-    serviceInfo.setAttribute(QBluetoothServiceInfo::ServiceProvider, tr("qt-project.org"));
+	serviceInfo.setAttribute(QBluetoothServiceInfo::ServiceName, tr("Bar-Roboter"));
+	serviceInfo.setAttribute(QBluetoothServiceInfo::ServiceDescription, tr("Host"));
+	serviceInfo.setAttribute(QBluetoothServiceInfo::
+							 ServiceProvider,tr("HTL-Wels-Diplomarbeit"));
     //! [Service name, description and provider]
 
     //! [Service UUID set]
@@ -105,7 +107,8 @@ void BluetoothTransmissionServer::startServer(const QBluetoothAddress& localAdap
 
     //! [Service Discoverability]
     QBluetoothServiceInfo::Sequence publicBrowse;
-    publicBrowse << QVariant::fromValue(QBluetoothUuid(QBluetoothUuid::PublicBrowseGroup));
+	publicBrowse<<QVariant::fromValue(QBluetoothUuid(
+										  QBluetoothUuid::PublicBrowseGroup));
     serviceInfo.setAttribute(QBluetoothServiceInfo::BrowseGroupList, publicBrowse);
     //! [Service Discoverability]
 
@@ -118,7 +121,8 @@ void BluetoothTransmissionServer::startServer(const QBluetoothAddress& localAdap
     protocol << QVariant::fromValue(QBluetoothUuid(QBluetoothUuid::Rfcomm))
              << QVariant::fromValue(quint8(rfcommServer->serverPort()));
     protocolDescriptorList.append(QVariant::fromValue(protocol));
-    serviceInfo.setAttribute(QBluetoothServiceInfo::ProtocolDescriptorList, protocolDescriptorList);
+	serviceInfo.setAttribute(QBluetoothServiceInfo::ProtocolDescriptorList,
+							 protocolDescriptorList);
     //! [Protocol descriptor list]
 
     //! [Register service]
@@ -195,7 +199,8 @@ void BluetoothTransmissionServer::readSocket()
     while (socket->canReadLine())
     {
         QByteArray line = socket->readLine().trimmed();
-        emit messageReceived(socket->peerName(), QString::fromUtf8(line.constData(), line.length()));
+		emit messageReceived(socket->peerName(), QString::fromUtf8(line.constData(),
+																   line.length()));
     }
 }
 //! [readSocket]

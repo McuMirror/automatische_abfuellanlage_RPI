@@ -1,4 +1,4 @@
-/* ###########################################################################################################
+/* ####################################################################################
  * Projekt:		Diplomarbeit: Autmatische Abfüllanlage
  * Host:		Raspberry PI 3B
  * Filename:	menu_mix.h
@@ -6,11 +6,7 @@
  * Entwickler:	Wögerbauer Stefan
  * E-Mail:		woegste@hotmail.com
  *
- * Änderungen:
- * Name:	Datum:	Zeit:	Änderung:
- *
- *
- * ##########################################################################################################
+ * ####################################################################################
  */
 
 #ifndef MENU_MIX_H
@@ -45,7 +41,11 @@ private slots:
 	void on_pushButton_delete_clicked();
 
 public slots:
-	void setContainerNames(QString Container_1, QString Container_2, QString Container_3, QString Container_4);
+	void setContainerNames(QString Container_1,
+						   QString Container_2,
+						   QString Container_3,
+						   QString Container_4);
+
 	void setMixtures(QList<mixture*> mixtures);
 	QList<mixture*> getMixtures(void);
 	void setMaxVolume(int volume);
