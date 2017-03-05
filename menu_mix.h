@@ -1,19 +1,17 @@
-/* ####################################################################################
- * Projekt:		Diplomarbeit: Autmatische Abfüllanlage
+/*
+ * Project:		Diplomarbeit: Autmatische Abfüllanlage
  * Host:		Raspberry PI 3B
  * Filename:	menu_mix.h
  *
- * Entwickler:	Wögerbauer Stefan
+ * Developer:	Wögerbauer Stefan
  * E-Mail:		woegste@hotmail.com
  *
- * ####################################################################################
  */
 
 #ifndef MENU_MIX_H
 #define MENU_MIX_H
 
 #include "mixture.h"
-
 #include <QDialog>
 #include <QString>
 #include <QList>

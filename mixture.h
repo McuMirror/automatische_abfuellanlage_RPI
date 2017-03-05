@@ -1,12 +1,11 @@
-/* ####################################################################################
- * Projekt:		Diplomarbeit: Autmatische Abfüllanlage
+/*
+ * Project:		Diplomarbeit: Autmatische Abfüllanlage
  * Host:		Raspberry PI 3B
  * Filename:	mixture.h
  *
- * Entwickler:	Wögerbauer Stefan
+ * Developer:	Wögerbauer Stefan
  * E-Mail:		woegste@hotmail.com
  *
- * ####################################################################################
  */
 
 #ifndef MIXTURE_H

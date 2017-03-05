@@ -1,12 +1,11 @@
-/* ####################################################################################
- * Projekt:		Diplomarbeit: Autmatische Abfüllanlage
+/*
+ * Project:		Diplomarbeit: Autmatische Abfüllanlage
  * Host:		Raspberry PI 3B
  * Filename:	mainwindow.h
  *
- * Entwickler:	Wögerbauer Stefan
+ * Developer:	Wögerbauer Stefan
  * E-Mail:		woegste@hotmail.com
  *
- * ####################################################################################
  */
 
 #ifndef MAINWINDOW_H
@@ -32,7 +31,9 @@
 #include <QBluetoothLocalDevice>
 
 //************** MACROS ****************************
-
+/*
+ * if Bluetooth is available set to 1, otherwise 0
+*/
 #define Bluetooth 1
 
 //**************************************************
@@ -62,10 +63,14 @@ private slots:
 	void writeListWidget(void);
 	void ButtonSlot(QList<int> valueList);
 	void on_comboBox_BT_local_Bluetooth_Adapter_currentIndexChanged(int index);
-	void setConatinerAmounts(int Container_1, int Container_2, int Container_3,
+	void setConatinerAmounts(int Container_1,
+							 int Container_2,
+							 int Container_3,
 							 int Container_4);
-	void calculateContainerVolumes(int ConsumtionContainer_1, int ConsumtionContainer_2,
-								  int ConsumtionContainer_3, int ConsumtionContainer_4);
+	void calculateContainerVolumes(int ConsumtionContainer_1,
+								   int ConsumtionContainer_2,
+								   int ConsumtionContainer_3,
+								   int ConsumtionContainer_4);
 	void on_pushButton_fill_C1_clicked();
 	void on_pushButton_fill_C2_clicked();
 	void on_pushButton_fill_C3_clicked();
@@ -74,6 +79,7 @@ private slots:
 	//Serial Port
 	void sendSerialCommand(QString sender, QString command);
 	void readSerialCommand(void);
+	void updateSerialDevices(void);
 
 	//Bluetooth
 #if Bluetooth
@@ -83,29 +89,42 @@ private slots:
 	void sendMixes(void);
 #endif
 
+	void on_pushButton_empty_container_1_clicked();
+
+	void on_pushButton_empty_container_2_clicked();
+
+	void on_pushButton_emptycontainer_3_clicked();
+
+	void on_pushButton_empty_container_4_clicked();
+
 private:
 	Ui::MainWindow *ui;
 
 	QTimer *clockTimer;     //Updates the clock in status bar
 	QTimer *serialTimeOut;
+	QTimer *updateSerialDevicesTimer;
 
-	int screenWidth;
-	int screenHeight;
+	//Private Integer
+	int screenWidth = 0;
+	int screenHeight = 0;
 
+	//Private memory
 	QSettings settings;
 
+	//Private lists
 	QList<mixture*> mixtures;
 
-	bool currentlyWorking;
-	bool commandReceived;
-	bool commandSended;
+	//Private boolean
+	bool currentlyWorking = false;
+	bool commandReceived = false;
+	bool commandSended = false;
 
 	//Serial Port
-	QSerialPort serial;
-	QByteArray response;
+	QSerialPort serial;			//serial Port
+	QByteArray response;		//answer of Slave
 
 	//Bluetooth
 	BluetoothTransmissionServer *BluetoothServer;
-	QList<QBluetoothHostInfo> localBluetoothAdapters;
+	QList<QBluetoothHostInfo>	localBluetoothAdapters;
 };
 #endif // MAINWINDOW_H

@@ -142,6 +142,8 @@ void BluetoothTransmissionServer::stopServer()
     // Close server
     delete rfcommServer;
     rfcommServer = 0;
+
+	qDebug() << "stop Bluetooth-Server";
 }
 //! [stopServer]
 

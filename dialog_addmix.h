@@ -1,13 +1,13 @@
-/* ####################################################################################
- * Projekt:		Diplomarbeit: Autmatische Abfüllanlage
+/*
+ * Project:		Diplomarbeit: Autmatische Abfüllanlage
  * Host:		Raspberry PI 3B
  * Filename:	dialog_addmix.h
  *
- * Entwickler:	Wögerbauer Stefan
+ * Developer:	Wögerbauer Stefan
  * E-Mail:		woegste@hotmail.com
  *
- * ####################################################################################
  */
+
 
 #ifndef DIALOG_ADDMIX_H
 #define DIALOG_ADDMIX_H
