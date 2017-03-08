@@ -281,7 +281,18 @@ void MainWindow::on_actionMischungen_bearbeiten_triggered()
 	 */
 	if(menu_mix.exec() == QDialog::Accepted)
 	{
-		this->mixtures = menu_mix.getMixtures();
+		for(int i=0; i<mixtures.size(); i++)
+		{
+			disconnect(ui->listWidget->itemWidget(ui->listWidget->item(i)),
+							SIGNAL(clicked(bool)), mixtures.at(i),
+							SLOT(getCommandValues()));
+
+			disconnect(mixtures.at(i), SIGNAL(sendCommandValues(QList<int>)), this,
+									SLOT(ButtonSlot(QList<int>)));
+		}
+
+		mixtures.clear();
+		/*this->*/ mixtures = menu_mix.getMixtures();
 		saveMixtures();
 	}
 	writeListWidget();
@@ -385,6 +396,7 @@ void MainWindow::sendSerialCommand(QString sender ,QString command)
 	/*
 	 * send the serial command and an '\n' on the end so that the end of the String
 	 * is marked
+	 *
 	 */
 	serial.write(command.toLocal8Bit() + '\n');
 
@@ -598,6 +610,7 @@ void MainWindow::writeListWidget(void)
 	 */
 
 	ui->listWidget->clear();	//delete the list Widget
+	qDebug() << "Write List Widget Mixtures size" << mixtures.size();
 
 	for(int i = 0; i<mixtures.size(); i++)
 	{
@@ -610,7 +623,6 @@ void MainWindow::writeListWidget(void)
 		item->setSizeHint(size);
 		ui->listWidget->addItem(item);				//add a new item to the listWidget
 		ui->listWidget->setItemWidget(item, button);//set the buttons item
-
 
 		/*
 		 * connect the signal of the button clicked with the slot of the mixutre
@@ -1009,6 +1021,7 @@ void MainWindow::on_pushButton_empty_container_1_clicked()
 	if(serial.isOpen() == true)
 	{
 		sendSerialCommand("Host", "EC1");
+		ui->progressBar_Contaner_1->setValue(0);
 		qDebug() << "empty container 1";
 	}
 	else if (serial.isOpen() == false)
@@ -1023,6 +1036,7 @@ void MainWindow::on_pushButton_empty_container_2_clicked()
 	if(serial.isOpen() == true)
 	{
 		sendSerialCommand("Host", "EC2");
+		ui->progressBar_Contaner_2->setValue(0);
 		qDebug() << "empty container 2";
 	}
 	else if (serial.isOpen() == false)
@@ -1037,6 +1051,7 @@ void MainWindow::on_pushButton_emptycontainer_3_clicked()
 	if(serial.isOpen() == true)
 	{
 		sendSerialCommand("Host", "EC3");
+		ui->progressBar_Contaner_3->setValue(0);
 		qDebug() << "empty container 3";
 	}
 	else if (serial.isOpen() == false)
@@ -1051,6 +1066,7 @@ void MainWindow::on_pushButton_empty_container_4_clicked()
 	if(serial.isOpen() == true)
 	{
 		sendSerialCommand("Host", "EC4");
+		ui->progressBar_Contaner_4->setValue(0);
 		qDebug() << "empty container 4";
 	}
 	else if (serial.isOpen() == false)

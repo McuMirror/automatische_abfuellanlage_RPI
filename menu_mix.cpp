@@ -182,6 +182,7 @@ void Menu_Mix::on_pushButton_edit_clicked()
 
 		Add.setName(mixtures_1.at(index)->getName());  //set the name of the mixture
 		Add.setMaxVolume(maxVolume);				   //set the max volume of the glass
+		Add.calculateDiff();
 
 		if(Add.exec() == QDialog::Accepted)
 		{

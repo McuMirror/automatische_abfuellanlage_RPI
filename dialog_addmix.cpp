@@ -25,6 +25,7 @@ Dialog_addMix::Dialog_addMix(QWidget *parent) :
 	/*
 	 * connect the signals from the SpinBoxes with the Method calculateDiff. Now the
 	 * available space for liquid is calculated after changes.
+	 *
 	 */
 
 	connect(ui->spinBox_container_1,	SIGNAL(valueChanged(int)), this,
@@ -40,7 +41,6 @@ Dialog_addMix::Dialog_addMix(QWidget *parent) :
 										SLOT(calculateDiff(void)));
 
 	ui->label_diff->setText(QString::number(maxVolume));
-
 }
 
 Dialog_addMix::~Dialog_addMix()
@@ -81,7 +81,7 @@ void Dialog_addMix::on_pushButton_cancel_clicked()
 
 QString Dialog_addMix::getName(void)
 {
-	return name;	//return the name of the mixture
+	return name;						//return the name of the mixture
 }
 
 void Dialog_addMix::setName(QString name)
