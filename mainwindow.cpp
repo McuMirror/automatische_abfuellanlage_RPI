@@ -673,7 +673,7 @@ void MainWindow::ButtonSlot(QList<int> valueList)
 								  "unter der Grafik des jeweiligen Behälters");
 
 		}
-		else if(settings.value("ContainerVolume_2", "").toInt() - valueList.at(0) < 0)
+		else if(settings.value("ContainerVolume_2", "").toInt() - valueList.at(1) < 0)
 		{
 			/*
 			 * Not enough liquid in container 2
@@ -695,7 +695,7 @@ void MainWindow::ButtonSlot(QList<int> valueList)
 									"unter der Grafik des jeweiligen Behälters");
 
 		}
-		else if(settings.value("ContainerVolume_3", "").toInt() - valueList.at(0) < 0)
+		else if(settings.value("ContainerVolume_3", "").toInt() - valueList.at(2) < 0)
 		{
 			/*
 			 * Not enough liquid in container 3
@@ -716,7 +716,7 @@ void MainWindow::ButtonSlot(QList<int> valueList)
 									"diesen vollständig und klicken Sie auf den Button "
 									"unter der Grafik des jeweiligen Behälters");
 		}
-		else if(settings.value("ContainerVolume_4", "").toInt() - valueList.at(0) < 0)
+		else if(settings.value("ContainerVolume_4", "").toInt() - valueList.at(3) < 0)
 		{
 			/*
 			 * Not enough liquid in container 4

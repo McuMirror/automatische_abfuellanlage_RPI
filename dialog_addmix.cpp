@@ -152,13 +152,13 @@ void Dialog_addMix::calculateDiff(void)
 	 *
 	 * if the sum of the liquids is higher than the max volume a warning will be sended
 	 */
-
+/*
 	if((ui->spinBox_container_1->value() + ui->spinBox_container_2->value() +
 		ui->spinBox_container_3->value() + ui->spinBox_container_4->value()) >maxVolume)
 	{
 		QMessageBox::critical(this, "Automatische Abfüllanlage",
 							  "Die maximale Füllmenge wurde Überschritten");
-	}
+	}*/
 	ui->label_diff->setText(QString::number(maxVolume -(ui->spinBox_container_1->value()
 											+ ui->spinBox_container_2->value()
 											+ ui->spinBox_container_3->value()
