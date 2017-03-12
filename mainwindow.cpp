@@ -63,9 +63,9 @@ MainWindow::MainWindow(QWidget *parent) :
 	 * is called after a special time
 	*/
 	serialTimeOut = new QTimer(this);
-	serialTimeOut->setSingleShot(true);
+	//serialTimeOut->setSingleShot(true);
 	connect(serialTimeOut,	SIGNAL(timeout()), this, SLOT(readSerialCommand()));
-
+	serialTimeOut->start(serialTimeOutTime_ms);
 
 	//Update the serial Devices evrey 5 seconds
 	updateSerialDevicesTimer = new QTimer(this);
@@ -398,78 +398,103 @@ void MainWindow::sendSerialCommand(QString sender ,QString command)
 	 * is marked
 	 *
 	 */
-	serial.write(command.toLocal8Bit() + '\n');
 
-	//start the timer for the serial timout, in this time the slave has to answer
-	serialTimeOut->start(serialTimeOutTime_ms);
+	if(serial.isOpen() == true)
+	{
+		serial.write(command.toLocal8Bit() + '\n');
 
-	QString time;
-	//read the current system time, write it into a sting in a special format
-	time = QDateTime::currentDateTime().toString("hh:mm:ss");
+		//start the timer for the serial timout, in this time the slave has to answer
+		//serialTimeOut->start(serialTimeOutTime_ms);
 
-	//Write the sendet command in a List Widget of the serial traffic
-	QListWidgetItem *newItem = new QListWidgetItem;
-	newItem->setText(time + " " + sender + ": " + command);
-	newItem->setTextColor(Qt::blue);
-	ui->listWidget_serial_traffic->insertItem(1, newItem);
+		QString time;
+		//read the current system time, write it into a sting in a special format
+		time = QDateTime::currentDateTime().toString("hh:mm:ss");
 
-	//TODO
+		//Write the sendet command in a List Widget of the serial traffic
+		QListWidgetItem *newItem = new QListWidgetItem;
+		newItem->setText(time + " " + sender + ": " + command);
+		newItem->setTextColor(Qt::blue);
+		ui->listWidget_serial_traffic->insertItem(1, newItem);
 
-	qDebug() << "send Serial Command: " << command;
+		//TODO
+
+		qDebug() << "send Serial Command: " << command;
+	}
+	else
+	{
+		QMessageBox::critical(this, "Automatische Abfüllanlage", "Serial Port Error");
+	}
 }
 
 void MainWindow::readSerialCommand(void)
 {
-	response.clear();				//delete the Byte Array before reading the new data
-	response.append(serial.readAll());	//read the received data
-
-	QString time;
-	//read the current system time, write it into a string in a special format
-	time = QDateTime::currentDateTime().toString("hh:mm:ss");
-
-	//write the receved data in the listWidget of the serial traffic
-	QListWidgetItem *newItem = new QListWidgetItem;
-	newItem->setText(time + "Client: " + response);
-	newItem->setTextColor(Qt::red);
-	ui->listWidget_serial_traffic->insertItem(1, newItem);
-
-	//TODO: do some checks
-
-	if(commandSended == true && response == "R")	//'R' for received
+	if(serial.isOpen() == true)
 	{
-		currentlyWorking =	true;
-		commandSended =		false;
-		commandReceived =	true;
+		response.clear();				//delete the Byte Array before reading the new data
+		response.append(serial.readAll());	//read the received data
 
-		qDebug() << "serial command received";
-		qDebug() << "maschine is working";
+		if(response.length() > 0)
+		{
+			QString time;
+			//read the current system time, write it into a string in a special format
+			time = QDateTime::currentDateTime().toString("hh:mm:ss");
 
-		//TODO: calculate the new container amounts
-	}
+			//write the receved data in the listWidget of the serial traffic
+			QListWidgetItem *newItem = new QListWidgetItem;
+			newItem->setText(time + "Client: " + response);
+			newItem->setTextColor(Qt::red);
+			ui->listWidget_serial_traffic->insertItem(1, newItem);
 
-	if(commandReceived == true && response == "Y") //'Y' for ready
-	{
-		currentlyWorking =	false;
-		commandReceived =	false;
+			if(response == "NH")
+			{
+				QMessageBox::critical(this, "Automatische Abfüllanlage",
+									  "Not-Halt wurde betätigt oder eine "
+									  "Störung ist aufgetreten.\n Um die Anlage zu "
+									  "Quitieren wählen Sie bitte eine neue Mischung");
+			}
 
-		qDebug() << "ready for the next mix";
-	}
+			//TODO: do some checks
+
+			if(commandSended == true && response == "R")	//'R' for received
+			{
+				currentlyWorking =	true;
+				commandSended =		false;
+				commandReceived =	true;
+
+				qDebug() << "serial command received";
+				qDebug() << "maschine is working";
+
+				//TODO: calculate the new container amounts
+			}
+
+			if(commandReceived == true && response == "Y") //'Y' for ready
+			{
+				currentlyWorking =	false;
+				commandReceived =	false;
+
+				qDebug() << "ready for the next mix";
+			}
 
 #if Bluetooth
-	//*********************************************************************************
-	//Bluetooth
+			//*************************************************************************
+			//Bluetooth
 
-	//if there is a Bluetooth adapeter available
-	if(localBluetoothAdapters.size() == 0)
-	{
-		//send the response to all clients
-		BluetoothServer->sendMessage(response);
-	}
-	//*********************************************************************************
+			//if there is a Bluetooth adapeter available
+			if(localBluetoothAdapters.size() == 0)
+			{
+				//send the response to all clients
+				BluetoothServer->sendMessage(response);
+			}
+			//*************************************************************************
 #endif
 
-	qDebug() << "read Serial Command: " << response.trimmed();
-
+			qDebug() << "read Serial Command: " << response.trimmed();
+		}
+		else
+		{
+			qDebug()<<"no traffic";
+		}
+	}
 }
 
 void MainWindow::on_pushButton_connect_clicked()
@@ -490,15 +515,15 @@ void MainWindow::on_pushButton_connect_clicked()
 
 	if(i%2 == 0) //if port is open --> close it, else open the port
 	{
-		//if (serial.portName() != "/dev/pts/7")
-		if (serial.portName() != ui->comboBox_serial->currentText())
+		if (serial.portName() != "/dev/pts/6")
+		//if (serial.portName() != ui->comboBox_serial->currentText())
 		{
 			serial.close();								//close the serial port
 			serial.setBaudRate(QSerialPort::Baud4800);	//set the Baudrate
 			serial.setParity(QSerialPort::NoParity);	//set the Parity
 			serial.setDataBits(QSerialPort::Data8);		//set the data lenght
-			serial.setPortName(ui->comboBox_serial->currentText()); //set the portname
-			//serial.setPortName("/dev/pts/7");
+			//serial.setPortName(ui->comboBox_serial->currentText()); //set the portname
+			serial.setPortName("/dev/pts/6");
 		}
 
 		if (!serial.open(QIODevice::ReadWrite))	//open the serial port
@@ -852,7 +877,7 @@ void MainWindow::BluetoothCommandReceived(QString client, QString command)
 	//command begins with "/" it's a command
 	if(command.at(0) == '/')
 	{
-		int count;
+		int count = 0;
 
 		for(int i = 0; i< mixtures.size(); i++)
 		{
@@ -890,7 +915,8 @@ void MainWindow::BluetoothCommandReceived(QString client, QString command)
 	}
 	else
 	{
-		//TODO: send back error via Bluetooth
+		//send back error via Bluetooth
+		BluetoothServer->sendMessage("_ERROR");
 
 		QMessageBox::critical(this, "Automatische Abfüllanlage",
 							  "Error: Befehl konnte nicht gelesen werden");
@@ -1018,60 +1044,103 @@ void MainWindow::on_pushButton_fill_C4_clicked()
 
 void MainWindow::on_pushButton_empty_container_1_clicked()
 {
-	if(serial.isOpen() == true)
-	{
-		sendSerialCommand("Host", "EC1");
-		ui->progressBar_Contaner_1->setValue(0);
-		qDebug() << "empty container 1";
-	}
-	else if (serial.isOpen() == false)
-	{
-		QMessageBox::critical(this, "Automatische Abfüllanlage",
-							  "Bitte stellen Sie eine Verbindung zur Anlage her !");
-	}
+		if(QMessageBox::question(this, "Automatische Abfüllanlage",
+								 "Wollen Sie den Behälter 1 wirklich entleeren ?")
+				== QMessageBox::Yes)
+		{
+			QMessageBox::information(this, "Automatische Abfüllanlage",
+									 "Bitte Stellen Sie ein geeignetes Gefäß "
+									 "unter die Abfüllstation 1 und klicken "
+									 "Sie anschlißend auf OK");
+
+			if(serial.isOpen() == true)
+			{
+				sendSerialCommand("Host", "EC1");
+				ui->progressBar_Contaner_1->setValue(0);
+				qDebug() << "empty container 1";
+			}
+			else if (serial.isOpen() == false)
+			{
+				QMessageBox::critical(this, "Automatische Abfüllanlage",
+								"Bitte stellen Sie eine Verbindung zur Anlage her!");
+			}
+		}
 }
 
 void MainWindow::on_pushButton_empty_container_2_clicked()
 {
-	if(serial.isOpen() == true)
+
+	if(QMessageBox::question(this, "Automatische Abfüllanlage",
+							 "Wollen Sie den Behälter 2 wirklich entleeren ?")
+			== QMessageBox::Yes)
 	{
-		sendSerialCommand("Host", "EC2");
-		ui->progressBar_Contaner_2->setValue(0);
-		qDebug() << "empty container 2";
-	}
-	else if (serial.isOpen() == false)
-	{
-		QMessageBox::critical(this, "Automatische Abfüllanlage",
-							  "Bitte stellen Sie eine Verbindung zur Anlage her !");
+		QMessageBox::information(this, "Automatische Abfüllanlage",
+								 "Bitte Stellen Sie ein geeignetes Gefäß "
+								 "unter die Abfüllstation 2 und klicken "
+								 "Sie anschlißend auf OK");
+
+		if(serial.isOpen() == true)
+		{
+			sendSerialCommand("Host", "EC2");
+			ui->progressBar_Contaner_1->setValue(0);
+			qDebug() << "empty container 2";
+		}
+		else if (serial.isOpen() == false)
+		{
+			QMessageBox::critical(this, "Automatische Abfüllanlage",
+							"Bitte stellen Sie eine Verbindung zur Anlage her!");
+		}
 	}
 }
 
 void MainWindow::on_pushButton_emptycontainer_3_clicked()
 {
-	if(serial.isOpen() == true)
+
+	if(QMessageBox::question(this, "Automatische Abfüllanlage",
+							 "Wollen Sie den Behälter 3 wirklich entleeren ?")
+			== QMessageBox::Yes)
 	{
-		sendSerialCommand("Host", "EC3");
-		ui->progressBar_Contaner_3->setValue(0);
-		qDebug() << "empty container 3";
-	}
-	else if (serial.isOpen() == false)
-	{
-		QMessageBox::critical(this, "Automatische Abfüllanlage",
-							  "Bitte stellen Sie eine Verbindung zur Anlage her !");
+		QMessageBox::information(this, "Automatische Abfüllanlage",
+								 "Bitte Stellen Sie ein geeignetes Gefäß "
+								 "unter die Abfüllstation 3 und klicken "
+								 "Sie anschlißend auf OK");
+
+		if(serial.isOpen() == true)
+		{
+			sendSerialCommand("Host", "EC3");
+			ui->progressBar_Contaner_1->setValue(0);
+			qDebug() << "empty container 3";
+		}
+		else if (serial.isOpen() == false)
+		{
+			QMessageBox::critical(this, "Automatische Abfüllanlage",
+							"Bitte stellen Sie eine Verbindung zur Anlage her!");
+		}
 	}
 }
 
 void MainWindow::on_pushButton_empty_container_4_clicked()
 {
-	if(serial.isOpen() == true)
+
+	if(QMessageBox::question(this, "Automatische Abfüllanlage",
+							 "Wollen Sie den Behälter 4 wirklich entleeren ?")
+			== QMessageBox::Yes)
 	{
-		sendSerialCommand("Host", "EC4");
-		ui->progressBar_Contaner_4->setValue(0);
-		qDebug() << "empty container 4";
-	}
-	else if (serial.isOpen() == false)
-	{
-		QMessageBox::critical(this, "Automatische Abfüllanlage",
-							  "Bitte stellen Sie eine Verbindung zur Anlage her !");
+		QMessageBox::information(this, "Automatische Abfüllanlage",
+								 "Bitte Stellen Sie ein geeignetes Gefäß "
+								 "unter die Abfüllstation 4 und klicken "
+								 "Sie anschlißend auf OK");
+
+		if(serial.isOpen() == true)
+		{
+			sendSerialCommand("Host", "EC4");
+			ui->progressBar_Contaner_1->setValue(0);
+			qDebug() << "empty container 4";
+		}
+		else if (serial.isOpen() == false)
+		{
+			QMessageBox::critical(this, "Automatische Abfüllanlage",
+							"Bitte stellen Sie eine Verbindung zur Anlage her!");
+		}
 	}
 }
