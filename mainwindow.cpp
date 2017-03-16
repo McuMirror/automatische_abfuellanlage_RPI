@@ -78,6 +78,9 @@ MainWindow::MainWindow(QWidget *parent) :
 	screenWidth  = screen->availableSize().width();
 	screenHeight = screen->availableSize().height();
 
+	criticalStop = false;
+	ui->label_maschine_state->setText("in Ordnung");
+
 	//**************** BLUETOOTH ******************************************************
 
 #if Bluetooth
@@ -399,7 +402,7 @@ void MainWindow::sendSerialCommand(QString sender ,QString command)
 	 *
 	 */
 
-	if(serial.isOpen() == true)
+	if(serial.isOpen() == true && criticalStop == false)
 	{
 		serial.write(command.toLocal8Bit() + '\n');
 
@@ -419,6 +422,13 @@ void MainWindow::sendSerialCommand(QString sender ,QString command)
 		//TODO
 
 		qDebug() << "send Serial Command: " << command;
+	}
+	else if(criticalStop == true)
+	{
+		BluetoothServer->sendMessage("_Anlage muss vor Ort quitiert werden!");
+
+		QMessageBox::information(this, "Automatische Abfüllanlage",
+								 "Anlage muss quitiert werden!");
 	}
 	else
 	{
@@ -445,12 +455,19 @@ void MainWindow::readSerialCommand(void)
 			newItem->setTextColor(Qt::red);
 			ui->listWidget_serial_traffic->insertItem(1, newItem);
 
-			if(response == "NH")
+			if(response == "N")
 			{
+				criticalStop = true;
+				ui->label_maschine_state->setText("Störung");
+
+				BluetoothServer->sendMessage("_Not-Halt wurde betätigt oder eine "
+									 "Störung ist aufgetreten.Bitte Quitieren "
+											 "Sie die Anlage");
+
 				QMessageBox::critical(this, "Automatische Abfüllanlage",
 									  "Not-Halt wurde betätigt oder eine "
-									  "Störung ist aufgetreten.\n Um die Anlage zu "
-									  "Quitieren wählen Sie bitte eine neue Mischung");
+									  "Störung ist aufgetreten.\nBitte Quitieren "
+									  "Sie die Anlage");
 			}
 
 			//TODO: do some checks
@@ -515,15 +532,15 @@ void MainWindow::on_pushButton_connect_clicked()
 
 	if(i%2 == 0) //if port is open --> close it, else open the port
 	{
-		if (serial.portName() != "/dev/pts/6")
-		//if (serial.portName() != ui->comboBox_serial->currentText())
+		//if (serial.portName() != "/dev/pts/6")
+		if (serial.portName() != ui->comboBox_serial->currentText())
 		{
 			serial.close();								//close the serial port
 			serial.setBaudRate(QSerialPort::Baud4800);	//set the Baudrate
 			serial.setParity(QSerialPort::NoParity);	//set the Parity
 			serial.setDataBits(QSerialPort::Data8);		//set the data lenght
-			//serial.setPortName(ui->comboBox_serial->currentText()); //set the portname
-			serial.setPortName("/dev/pts/6");
+			serial.setPortName(ui->comboBox_serial->currentText()); //set the portname
+			//serial.setPortName("/dev/pts/6");
 		}
 
 		if (!serial.open(QIODevice::ReadWrite))	//open the serial port
@@ -780,11 +797,14 @@ void MainWindow::ButtonSlot(QList<int> valueList)
 
 			commandSended = true;
 
-			//calculate the new container values
-			calculateContainerVolumes(valueList.at(0),
-									  valueList.at(1),
-									  valueList.at(2),
-									  valueList.at(3));
+			//calculate the new container values if there is no error
+			if(criticalStop == false)
+			{
+				calculateContainerVolumes(valueList.at(0),
+										  valueList.at(1),
+										  valueList.at(2),
+										  valueList.at(3));
+			}
 		}
 	}
 	else if(!serial.isOpen())
@@ -1082,7 +1102,7 @@ void MainWindow::on_pushButton_empty_container_2_clicked()
 		if(serial.isOpen() == true)
 		{
 			sendSerialCommand("Host", "EC2");
-			ui->progressBar_Contaner_1->setValue(0);
+			ui->progressBar_Contaner_2->setValue(0);
 			qDebug() << "empty container 2";
 		}
 		else if (serial.isOpen() == false)
@@ -1108,7 +1128,7 @@ void MainWindow::on_pushButton_emptycontainer_3_clicked()
 		if(serial.isOpen() == true)
 		{
 			sendSerialCommand("Host", "EC3");
-			ui->progressBar_Contaner_1->setValue(0);
+			ui->progressBar_Contaner_3->setValue(0);
 			qDebug() << "empty container 3";
 		}
 		else if (serial.isOpen() == false)
@@ -1134,7 +1154,7 @@ void MainWindow::on_pushButton_empty_container_4_clicked()
 		if(serial.isOpen() == true)
 		{
 			sendSerialCommand("Host", "EC4");
-			ui->progressBar_Contaner_1->setValue(0);
+			ui->progressBar_Contaner_4->setValue(0);
 			qDebug() << "empty container 4";
 		}
 		else if (serial.isOpen() == false)
@@ -1143,4 +1163,10 @@ void MainWindow::on_pushButton_empty_container_4_clicked()
 							"Bitte stellen Sie eine Verbindung zur Anlage her!");
 		}
 	}
+}
+
+void MainWindow::on_pushButton_verify_clicked()
+{
+	criticalStop = false;
+	ui->label_maschine_state->setText("in Ordnung");
 }

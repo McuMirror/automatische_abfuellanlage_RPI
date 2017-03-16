@@ -57,9 +57,6 @@
       </property>
      </widget>
     </item>
-    <item row="5" column="0" rowspan="13">
-     <widget class="QListWidget" name="listWidget_BT_Clienten"/>
-    </item>
     <item row="0" column="2">
      <widget class="QLabel" name="label_2">
       <property name="font">
@@ -73,20 +70,17 @@
       </property>
      </widget>
     </item>
-    <item row="20" column="0">
-     <widget class="QPushButton" name="pushButton_connect">
-      <property name="text">
-       <string>Verbinden</string>
+    <item row="0" column="3" rowspan="25">
+     <widget class="Line" name="line_2">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
       </property>
      </widget>
     </item>
-    <item row="19" column="0">
-     <widget class="QComboBox" name="comboBox_serial"/>
-    </item>
-    <item row="21" column="0">
-     <widget class="QLabel" name="label_status">
+    <item row="24" column="0">
+     <widget class="QPushButton" name="pushButton_clearSerialTraffic">
       <property name="text">
-       <string>getrennt</string>
+       <string>Clear</string>
       </property>
      </widget>
     </item>
@@ -103,13 +97,17 @@
       </property>
      </widget>
     </item>
-    <item row="23" column="0">
-     <widget class="QListWidget" name="listWidget_serial_traffic">
-      <property name="minimumSize">
-       <size>
-        <width>0</width>
-        <height>0</height>
-       </size>
+    <item row="20" column="0">
+     <widget class="QPushButton" name="pushButton_connect">
+      <property name="text">
+       <string>Verbinden</string>
+      </property>
+     </widget>
+    </item>
+    <item row="21" column="0">
+     <widget class="QLabel" name="label_status">
+      <property name="text">
+       <string>getrennt</string>
       </property>
      </widget>
     </item>
@@ -126,14 +124,50 @@
       </property>
      </widget>
     </item>
-    <item row="24" column="0">
-     <widget class="QPushButton" name="pushButton_clearSerialTraffic">
-      <property name="text">
-       <string>Clear</string>
+    <item row="19" column="0">
+     <widget class="QComboBox" name="comboBox_serial"/>
+    </item>
+    <item row="23" column="0">
+     <widget class="QListWidget" name="listWidget_serial_traffic">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>0</height>
+       </size>
       </property>
      </widget>
     </item>
-    <item row="1" column="2" rowspan="24">
+    <item row="5" column="0" rowspan="13">
+     <widget class="QListWidget" name="listWidget_BT_Clienten"/>
+    </item>
+    <item row="26" column="0">
+     <widget class="QLabel" name="label_maschine_state">
+      <property name="text">
+       <string>Status</string>
+      </property>
+     </widget>
+    </item>
+    <item row="25" column="0">
+     <widget class="QLabel" name="label_9">
+      <property name="font">
+       <font>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Anlageninfo:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="27" column="0">
+     <widget class="QPushButton" name="pushButton_verify">
+      <property name="text">
+       <string>quitieren</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="2" rowspan="27">
      <widget class="QListWidget" name="listWidget">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
@@ -149,7 +183,7 @@
       </property>
      </widget>
     </item>
-    <item row="0" column="4" rowspan="25">
+    <item row="0" column="4" rowspan="28">
      <layout class="QGridLayout" name="gridLayout">
       <item row="2" column="0">
        <widget class="QLabel" name="label_5">
@@ -418,13 +452,6 @@
        </widget>
       </item>
      </layout>
-    </item>
-    <item row="0" column="3" rowspan="25">
-     <widget class="Line" name="line_2">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-     </widget>
     </item>
    </layout>
   </widget>

@@ -97,6 +97,8 @@ private slots:
 
 	void on_pushButton_empty_container_4_clicked();
 
+	void on_pushButton_verify_clicked();
+
 private:
 	Ui::MainWindow *ui;
 
@@ -118,6 +120,7 @@ private:
 	bool currentlyWorking = false;
 	bool commandReceived = false;
 	bool commandSended = false;
+	bool criticalStop = false;
 
 	//Serial Port
 	QSerialPort serial;			//serial Port
